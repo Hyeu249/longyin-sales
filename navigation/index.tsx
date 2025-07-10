@@ -1,9 +1,26 @@
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import {
+  createNativeStackNavigator,
+  NativeStackNavigationProp,
+} from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import TestScreen from "../src/components/TestScreen";
 import { useLanguage } from "../LanguageContext";
+import TestScreen from "../src/components/TestScreen";
+import HomeScreen from "../src/pages/HomeScreen";
+import MaterialRequest from "../src/pages/MaterialRequest";
+import SetRFIDScreen from "../src/pages/SetRFIDScreen";
+import LoginScreen from "../src/pages/LoginScreen";
+import SettingsScreen from "../src/pages/SettingsScreen";
+import { Portal, Provider as PaperProvider } from "react-native-paper";
+type StackParamList = {
+  Hello: undefined;
+  DrawerNavigator: undefined;
+  Login: undefined;
+  MaterialRequest: undefined;
+};
+
+export type StackNavigationProp = NativeStackNavigationProp<StackParamList>;
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -14,10 +31,26 @@ function DrawerNavigator() {
 
   return (
     <Drawer.Navigator>
-      <Drawer.Screen name="Home" component={BottomTabNavigator} />
       <Drawer.Screen
-        name="ChatBot"
-        component={() => <TestScreen text={t("ChatBot")} />}
+        name="PimaryScreen"
+        component={BottomTabNavigator}
+        options={{
+          drawerLabel: "Màn hình chính",
+        }}
+      />
+      <Drawer.Screen
+        name="settingsScreen"
+        options={{
+          title: "Thiết lập",
+        }}
+        component={SettingsScreen}
+      />
+      <Drawer.Screen
+        name="LoginScreen"
+        options={{
+          title: "Đăng nhập",
+        }}
+        component={LoginScreen}
       />
     </Drawer.Navigator>
   );
@@ -29,29 +62,34 @@ function BottomTabNavigator() {
   return (
     <BottomTab.Navigator screenOptions={{ headerShown: false }}>
       <BottomTab.Screen
-        name={t("HomeScreen")}
-        component={() => <TestScreen text={t("HomeScreen")} />}
-      />
+        name="HomeScreen"
+        options={{
+          title: "Trang chủ",
+        }}
+      >
+        {() => <HomeScreen />}
+      </BottomTab.Screen>
       <BottomTab.Screen
-        name={t("MailScreen")}
-        component={() => <TestScreen text={t("MailScreen")} />}
-      />
-      <BottomTab.Screen
-        name={t("Gift")}
-        component={() => <TestScreen text={t("Gift")} />}
-      />
-      <BottomTab.Screen
-        name={t("Rating")}
-        component={() => <TestScreen text={t("Rating")} />}
-      />
+        name="SetRfidScreen"
+        options={{
+          tabBarLabel: "Thiết lập rfid",
+        }}
+      >
+        {() => <SetRFIDScreen />}
+      </BottomTab.Screen>
     </BottomTab.Navigator>
   );
 }
 
 function StackNavigator() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="DrawerNavigator" component={DrawerNavigator} />
+    <Stack.Navigator>
+      <Stack.Screen
+        name="DrawerNavigator"
+        component={DrawerNavigator}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen name="MaterialRequest" component={MaterialRequest} />
     </Stack.Navigator>
   );
 }
@@ -59,7 +97,9 @@ function StackNavigator() {
 export default function Navigation() {
   return (
     <NavigationContainer>
-      <StackNavigator />
+      <Portal.Host>
+        <StackNavigator />
+      </Portal.Host>
     </NavigationContainer>
   );
 }

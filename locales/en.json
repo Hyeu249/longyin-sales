@@ -1,4 +1,6 @@
 {
-  "hello": "Hello",
-  "welcome": "Welcome to our app"
+  "Home": "Home",
+  "Bán hàng": "Selling",
+  "Mua hàng": "Buying",
+  "Kho hàng": "Stock"
 }

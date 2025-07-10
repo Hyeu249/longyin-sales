@@ -1,18 +1,26 @@
-import { Keyboard, TouchableWithoutFeedback, Platform } from 'react-native';
+import {
+  Keyboard,
+  Pressable,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 
 type WrapperProps = {
   children: React.ReactNode;
 };
 
-function Wrapper({ children }: WrapperProps) {
-  if (Platform.OS === 'web') {
-    return <>{children}</>; // Web thì không bọc
+export default function Wrapper({ children }: WrapperProps) {
+  if (Platform.OS === "web") {
+    return <>{children}</>; // Web không cần xử lý bàn phím
   }
+
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      {children}
-    </TouchableWithoutFeedback>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
+    >
+      <Pressable onPress={Keyboard.dismiss}>{children}</Pressable>
+    </KeyboardAvoidingView>
   );
 }
-
-export default Wrapper;
